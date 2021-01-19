@@ -1,3 +1,7 @@
+# This code simulates the take-off dynamics of a propreller-driven hand-launched aircraft
+# By default the loop is rigged to iterate through a range of thrust values and break the least thrust required to achieve an un-eventful launch
+# The loop can be modified to iterate for any other parameter and optimize that
+
 import matplotlib.pyplot as plt
 import numpy as np
 import math
@@ -30,8 +34,6 @@ while T <= 20:
 
     # solution to differential equations:
 
-    #v = u+(np.sqrt(F/b)*np.tanh(t*np.sqrt(b*F)/M))
-
     term1 = math.sqrt(4*b*F*vo**2 + F**2)
 
     arg_atanh = (F + 2*b*u*vo)/(term1) # this has to be less than 1 => gives starting point for iterating T
@@ -43,11 +45,11 @@ while T <= 20:
     L = l*(v**2)
     h = ho+((0.5*(L-(M*g))/M)*(t**2)) # neglecting drag in vertical direction
     
-    if min(h) >= hcrit:
+    if min(h) >= hcrit: # if the aircraft does not droop below critical height, well done.
         break
 
-vmax = (math.sqrt(F**2 + 4*b*F*vo**2)-F)/(2*b*vo)
-vstall = 3.6*(math.sqrt(M*g/l))
+vmax = (math.sqrt(F**2 + 4*b*F*vo**2)-F)/(2*b*vo) # this is a special condition of the DE solution where thrust = drag
+vstall = 3.6*(math.sqrt(M*g/l)) # special condition where lift = weight
 
 print('Total plane mass: ',M,' kg')
 print('Wing loading: ',M/Al,' kg/m^2')
